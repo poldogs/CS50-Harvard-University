@@ -1,0 +1,2 @@
+Practicar todos los ejercicios de CS50 en Javascript, pero simplificandolos de la mejor forma
+posible, para exprimir el lenguaje al máximo.
