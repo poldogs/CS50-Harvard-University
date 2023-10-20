@@ -6,27 +6,6 @@ here means “remainder when dividing by 26.” This formula perhaps makes the c
 than it is, but it’s really just a concise way of expressing the algorithm precisely. */
 
 const caesar = (message = "", key = 0) => {
-
-    const messageOnCode = message.split("").map((x) => x.charCodeAt());
-
-    const messageCodeCyphered = messageOnCode.map((x) => {
-        if (x >= 65 && x <= 90) {
-            return ((x - 65 + key) % 26) + 65;
-        } else if (x >= 97 && x <= 122) {
-            return ((x - 97 + key) % 26) + 97;
-        } else {
-            return x;
-        }
-    });
-
-    const messageCyphered = messageCodeCyphered.map((x) => String.fromCharCode(x)).join("");
-
-    console.log(messageCyphered);
-}
-
-caesar("Hello", 1);
-
-const caesar2 = (message = "", key = 0) => {
     const shift = (char, base, key) => String.fromCharCode(((char.charCodeAt() - base + key) % 26) + base);
 
     const caesarCipher = (char) => {
@@ -40,4 +19,4 @@ const caesar2 = (message = "", key = 0) => {
     console.log(messageCyphered);
 }
 
-caesar2("Hello", 1);
+caesar("Hello", 1);

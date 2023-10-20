@@ -12,22 +12,15 @@ where L is the average number of letters per 100 words in the text, and S
   its reading level.*/
 
 const readability = (text = "") => {
-    let word = 0,
-    sentence = 0,
-    letter = 0;
+    const wordArray = text.split(/\s+/).filter(word => word.length > 0);
+    const sentenceArray = text.split(/[.!?;]/).filter(sentence => sentence.length > 0);
 
-    for (let char = 0; char < text.length; char++) {
-        if (text.charAt(char)===" "){
-            word++
-        } else if (text.charAt(char).includes(".")||text.charAt(char).includes("!")||text.charAt(char).includes(";")||text.charAt(char).includes(":")){
-            sentence++
-        } else {
-            letter++
-        } 
-    }
+    const words = wordArray.length;
+    const sentences = sentenceArray.length;
+    const letters = text.replace(/[^a-zA-Z]/g, "").length;
 
-    let index = 0.0588 * (letter*100/word) - 0.296 * (sentence/word*100) - 15.8
-    console.log(Math.round(index))
+    const index = 0.0588 * (letters / words * 100) - 0.296 * (sentences / words * 100) - 15.8;
+    console.log(Math.round(index));
 }
 
 readability("Harry Potter was a highly unusual boy in many ways. For one thing, he hated the summer holidays more than any other time of year. For another, he really wanted to do his homework, but was forced to do it in secret, in the dead of the night. And he also happened to be a wizard.")
