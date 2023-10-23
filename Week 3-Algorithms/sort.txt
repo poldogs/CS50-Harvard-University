@@ -1,0 +1,13 @@
+sort1 uses: bubble sort
+
+How do you know?: In general, it is not as efficient as Merge Sort, but in sorted50000.txt it can detect that the list
+is already sorted and stop quickly.
+
+sort2 uses: merge sort
+
+How do you know?: It takes the least amount of time to make random50000.txt and Merge Sort is much more efficient than
+Selection Sort and Bubble Sort for large lists.
+
+sort3 uses: selection sort
+
+How do you know?: It is the simplest algorithm but least efficient in general.
