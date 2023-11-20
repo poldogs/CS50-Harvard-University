@@ -1,8 +1,10 @@
+# Simulate a sports tournament
+
 import csv
 import sys
 import random
 
-# Number of simulations to run
+# Number of simluations to run
 N = 1000
 
 
@@ -12,10 +14,10 @@ def main():
         sys.exit("Usage: python tournament.py FILENAME")
 
     teams = read_teams_from_file(sys.argv[1])
+    # TODO: Read teams into memory from file
 
     counts = {}
-
-    # Simulate N tournaments and keep track of win counts
+    # TODO: Simulate N tournaments and keep track of win counts
     for _ in range(N):
         winner = simulate_tournament(teams)
         if winner in counts:
@@ -39,7 +41,6 @@ def read_teams_from_file(filename):
     return teams
 
 
-
 def simulate_game(team1, team2):
     """Simulate a game. Return True if team1 wins, False otherwise."""
     rating1 = team1["rating"]
@@ -51,16 +52,20 @@ def simulate_game(team1, team2):
 def simulate_round(teams):
     """Simulate a round. Return a list of winning teams."""
     winners = []
+
+    # Simulate games for all pairs of teams
     for i in range(0, len(teams), 2):
         if simulate_game(teams[i], teams[i + 1]):
             winners.append(teams[i])
         else:
             winners.append(teams[i + 1])
+
     return winners
 
 
 def simulate_tournament(teams):
     """Simulate a tournament. Return name of winning team."""
+    # TODO
     while len(teams) > 1:
         teams = simulate_round(teams)
     return teams[0]["name"]
