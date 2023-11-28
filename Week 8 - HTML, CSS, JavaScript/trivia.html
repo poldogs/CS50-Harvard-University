@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+        <link href="trivia.css" rel="stylesheet">
+        <title>Trivia!</title>
+        <script>
+            var selectedOptions = [];
+
+            function checkMultipleChoiceAnswer(optionIndex) {
+                var index = selectedOptions.indexOf(optionIndex);
+
+                if (index === -1) {
+                    selectedOptions.push(optionIndex);
+                } else {
+                    selectedOptions.splice(index, 1);
+                }
+
+                var feedback = document.getElementById("multiple-choice-feedback");
+
+                if (selectedOptions.length === 2) {
+                    var isTapasSelected = selectedOptions.includes(0);
+                    var isPaellaSelected = selectedOptions.includes(2);
+
+                    if (isTapasSelected && isPaellaSelected) {
+                        feedback.innerHTML = "Correct!";
+                        feedback.className = "correct";
+                    } else {
+                        feedback.innerHTML = "Incorrect";
+                        feedback.className = "incorrect";
+                    }
+                } else {
+                    feedback.innerHTML = "";
+                    feedback.className = "";
+                }
+
+                var buttons = document.querySelectorAll(".container button");
+                buttons.forEach(function (button, index) {
+                    if (selectedOptions.includes(index)) {
+                        button.classList.add("active");
+                    } else {
+                        button.classList.remove("active");
+                    }
+                });
+            }
+
+            function checkFreeResponseAnswer() {
+                var userAnswer = document.getElementById("free-response-answer").value;
+                var feedback = document.getElementById("free-response-feedback");
+                var correctAnswer = "paella";
+
+                if (userAnswer.toLowerCase() === correctAnswer) {
+                    feedback.innerHTML = "Correct!";
+                    feedback.className = "correct";
+                } else {
+                    feedback.innerHTML = "Incorrect";
+                    feedback.className = "incorrect";
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <div class="header">
+            <h1>Trivia!</h1>
+        </div>
+
+        <div class="container">
+            <div class="section">
+                <h2>Part 1: Multiple Choice </h2>
+                <h3>What are famous dishes in Spain?</h3>
+                <button onclick="checkMultipleChoiceAnswer(0)">Tapas</button>
+                <button onclick="checkMultipleChoiceAnswer(1)">Sushi</button>
+                <button onclick="checkMultipleChoiceAnswer(2)">Paella</button>
+                <button onclick="checkMultipleChoiceAnswer(3)">Burger</button>
+                <p id="multiple-choice-feedback"></p>
+                <hr>
+            </div>
+
+            <div class="section">
+                <h2>Part 2: Free Response</h2>
+                <h3>What is the national dish of Spain?</h3>
+                <input type="text" id="free-response-answer">
+                <button onclick="checkFreeResponseAnswer()">Submit Answer</button>
+                <p id="free-response-feedback"></p>
+                <hr>
+            </div>
+        </div>
+    </body>
+</html>
