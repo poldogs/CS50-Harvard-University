@@ -34,3 +34,24 @@ footer p {
 .social-icons i:hover {
     color: #a4a9ad;
 }
+
+img, #sportsCarousel {
+    width: 100%;
+    height: auto;
+}
+  
+@media (min-width: 768px) {
+    img, #sportsCarousel {
+      width: 50%; 
+    }
+}
+  
+@media (min-width: 1024px) {
+    img, #sportsCarousel {
+      width: 70%; 
+    }
+}
+
+.hidden {
+    display: none;
+}
