@@ -4,7 +4,8 @@
     <head>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>  
         <link href="homepage-styles.css" rel="stylesheet">
         <title>My Webpage | Nutrition</title>
     </head>
@@ -35,55 +36,55 @@
         <section class="container mt-5">
             <h1>Nutrition</h1>
             <div class="accordion" id="nutritionAccordion">
-                <!-- Proteins -->
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="proteinsHeading">
-                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#proteinsCollapse" aria-expanded="true" aria-controls="proteinsCollapse">
-                            Proteins
-                        </button>
-                    </h2>
-                    <div id="proteinsCollapse" class="accordion-collapse collapse show"
-                        aria-labelledby="proteinsHeading" data-bs-parent="#nutritionAccordion">
-                        <div class="accordion-body">
-                            <p>Proteins are essential for muscle repair and growth. Include lean sources like chicken,
-                                fish, eggs, and tofu in your diet.</p>
+                <div class="card mt-5">
+                    <div class="card-header" id="proteinsHeading">
+                        <h2 class="mb-0">
+                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#proteinsCollapse"
+                                    aria-expanded="true" aria-controls="proteinsCollapse">
+                                Proteins
+                            </button>
+                        </h2>
+                    </div>
+                    <div id="proteinsCollapse" class="collapse show" aria-labelledby="proteinsHeading" data-parent="#nutritionAccordion">
+                        <div class="card-body">
+                            <p>Proteins are essential for muscle repair and growth. Include lean sources like chicken, fish, eggs, and tofu in your diet.</p>
                         </div>
                     </div>
                 </div>
-
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="carbsHeading">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#carbsCollapse" aria-expanded="false" aria-controls="carbsCollapse">
-                            Carbohydrates
-                        </button>
-                    </h2>
-                    <div id="carbsCollapse" class="accordion-collapse collapse" aria-labelledby="carbsHeading"
-                        data-bs-parent="#nutritionAccordion">
-                        <div class="accordion-body">
-                            <p>Carbohydrates provide energy. Opt for complex carbs like whole grains, fruits, and
-                                vegetables for sustained energy levels.</p>
+            
+                <div class="card mt-5">
+                    <div class="card-header" id="carbsHeading">
+                        <h2 class="mb-0">
+                            <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#carbsCollapse"
+                                    aria-expanded="false" aria-controls="carbsCollapse">
+                                Carbohydrates
+                            </button>
+                        </h2>
+                    </div>
+                    <div id="carbsCollapse" class="collapse" aria-labelledby="carbsHeading" data-parent="#nutritionAccordion">
+                        <div class="card-body">
+                            <p>Carbohydrates provide energy. Opt for complex carbs like whole grains, fruits, and vegetables for sustained energy levels.</p>
                         </div>
                     </div>
                 </div>
-
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="fatsHeading">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#fatsCollapse" aria-expanded="false" aria-controls="fatsCollapse">
-                            Fats
-                        </button>
-                    </h2>
-                    <div id="fatsCollapse" class="accordion-collapse collapse" aria-labelledby="fatsHeading"
-                        data-bs-parent="#nutritionAccordion">
-                        <div class="accordion-body">
-                            <p>Fats are important for hormone production and absorption of fat-soluble vitamins. Choose
-                                healthy fats like avocados, nuts, and olive oil.</p>
+            
+                <div class="card mt-5">
+                    <div class="card-header" id="fatsHeading">
+                        <h2 class="mb-0">
+                            <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#fatsCollapse"
+                                    aria-expanded="false" aria-controls="fatsCollapse">
+                                Fats
+                            </button>
+                        </h2>
+                    </div>
+                    <div id="fatsCollapse" class="collapse" aria-labelledby="fatsHeading" data-parent="#nutritionAccordion">
+                        <div class="card-body">
+                            <p>Fats are important for hormone production and absorption of fat-soluble vitamins. Choose healthy fats like avocados, nuts, and olive oil.</p>
                         </div>
                     </div>
                 </div>
             </div>
+            
         </section>
     
         <footer>
