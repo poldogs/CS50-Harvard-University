@@ -7,6 +7,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from helpers import apology, login_required, lookup, usd
 
+import sqlite3
 
 # Configure application
 app = Flask(__name__)
@@ -66,36 +67,46 @@ def index():
 def buy():
     """Buy shares of stock"""
     if request.method == "POST":
+        # Retrieve form data
         symbol = request.form.get("symbol")
         shares = request.form.get("shares")
 
+        # Validate symbol input
         if not symbol:
-            return apology("must provide symbol", 403)
+            return apology("must provide symbol", 400)
 
+        # Validate shares input
         if not shares or not shares.isdigit() or int(shares) <= 0:
-            return apology("must provide a positive integer for shares", 403)
+            return apology("must provide a positive integer for shares", 400)
 
+        # Lookup stock information
         quote = lookup(symbol)
         if quote is None:
-            return apology("invalid symbol", 403)
+            return apology("invalid symbol", 400)
 
+        # Calculate cost of the purchase
         cost = quote['price'] * int(shares)
 
+        # Connect to database
         conn = sqlite3.connect('finance.db')
         db = conn.cursor()
+
+        # Retrieve user's cash balance
         db.execute("SELECT cash FROM users WHERE id = ?", (session["user_id"],))
         cash = db.fetchone()[0]
 
+        # Check if user can afford the purchase
         if cash < cost:
-            return apology("can't afford", 403)
+            return apology("can't afford", 400)
 
+        # Update user's cash balance and record the transaction
         db.execute("UPDATE users SET cash = cash - ? WHERE id = ?", (cost, session["user_id"]))
-        db.execute("INSERT INTO transactions (user_id, symbol, shares, price) VALUES (?, ?, ?, ?)",
-                   (session["user_id"], symbol, shares, quote['price']))
+        db.execute("INSERT INTO transactions (user_id, symbol, shares, price, type) VALUES (?, ?, ?, ?, ?)",
+                   (session["user_id"], symbol, shares, quote['price'], 'buy'))
+
+        # Commit changes and redirect to home page
         conn.commit()
-
         return redirect(url_for("index"))
-
     else:
         return render_template("buy.html")
 
@@ -104,11 +115,11 @@ def buy():
 @login_required
 def history():
     """Show history of transactions"""
-    conn = sqlite3.connect('finance.db')
-    db = conn.cursor()
-    db.execute("SELECT symbol, shares, price, timestamp FROM transactions WHERE user_id = ? ORDER BY timestamp DESC", (session["user_id"],))
-    transactions = db.fetchall()
-    return render_template("history.html", transactions=transactions)
+    # Query database for user's transaction history
+    rows = db.execute("SELECT symbol, shares, price, timestamp, type FROM transactions WHERE user_id = ? ORDER BY timestamp DESC", session["user_id"])
+
+    # Render history template
+    return render_template("history.html", transactions=rows)
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -123,18 +134,18 @@ def login():
 
         # Ensure username was submitted
         if not request.form.get("username"):
-            return apology("must provide username", 403)
+            return apology("must provide username", 400)
 
         # Ensure password was submitted
         elif not request.form.get("password"):
-            return apology("must provide password", 403)
+            return apology("must provide password", 400)
 
         # Query database for username
         rows = db.execute("SELECT * FROM users WHERE username = ?", request.form.get("username"))
 
         # Ensure username exists and password is correct
         if len(rows) != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password")):
-            return apology("invalid username and/or password", 403)
+            return apology("invalid username and/or password", 400)
 
         # Remember which user has logged in
         session["user_id"] = rows[0]["id"]
@@ -142,7 +153,6 @@ def login():
         # Redirect user to home page
         return redirect("/")
 
-    # User reached route via GET (as by clicking a link or via redirect)
     else:
         return render_template("login.html")
 
@@ -162,18 +172,23 @@ def logout():
 @login_required
 def quote():
     """Get stock quote."""
+    # Handle POST request for getting stock quote
     if request.method == "POST":
+        # Retrieve symbol from form
         symbol = request.form.get("symbol")
-        if not symbol:
-            return apology("must provide symbol", 403)
 
+        # Validate symbol input
+        if not symbol:
+            return apology("must provide symbol", 400)
+
+        # Lookup stock information
         quote = lookup(symbol)
         if quote is None:
-            return apology("invalid symbol", 403)
+            return apology("invalid symbol", 400)
 
+        # Render quoted template with stock information
         return render_template("quoted.html", quote=quote)
 
-    # User reached route via GET (as by clicking a link or via redirect)
     else:
         return render_template("quote.html")
 
@@ -181,22 +196,28 @@ def quote():
 @app.route("/register", methods=["GET", "POST"])
 def register():
     """Register user"""
+    # Handle POST request for user registration
     if request.method == "POST":
+        # Retrieve registration information
         username = request.form.get("username")
         password = request.form.get("password")
         confirmation = request.form.get("confirmation")
 
-        # Ensure username was submitted
+        # Validate username input
         if not username:
-            return apology("must provide username", 403)
+            return apology("must provide username", 400)
 
-        # Ensure password was submitted
+        # Validate password input
         elif not password:
-            return apology("must provide password", 403)
+            return apology("must provide password", 400)
 
-        # Ensure password confirmation matches
+        # Ensure password confirmation was submitted
+        elif not confirmation:
+            return apology("must provide password confirmation", 400)
+
+        # Validate password confirmation
         elif password != confirmation:
-            return apology("passwords don't match", 403)
+            return apology("passwords don't match", 400)
 
         # Hash the user's password
         hashed_password = generate_password_hash(password)
@@ -218,30 +239,37 @@ def register():
 @login_required
 def sell():
     """Sell shares of stock"""
+    # Handle POST request for selling shares
     if request.method == "POST":
+        # Ensure symbol was submitted
         symbol = request.form.get("symbol")
-        shares = request.form.get("shares")
         if not symbol:
-            return apology("must provide symbol", 403)
-        if not shares or not shares.isdigit() or int(shares) <= 0:
-            return apology("must provide a positive integer for shares", 403)
-        shares = int(shares)
-        conn = sqlite3.connect('finance.db')
-        db = conn.cursor()
-        db.execute("SELECT SUM(shares) as total_shares FROM transactions WHERE user_id = ? AND symbol = ? GROUP BY symbol", (session["user_id"], symbol))
-        total_shares = db.fetchone()
-        if total_shares is None or total_shares[0] < shares:
+            return apology("must provide symbol", 400)
+
+        # Ensure shares was submitted
+        try:
+            shares = int(request.form.get("shares"))
+        except ValueError:
+            return apology("shares must be a positive integer", 400)
+
+        # Check if the user owns the stock and has enough shares to sell
+        rows = db.execute("SELECT SUM(shares) as total_shares FROM transactions WHERE user_id = :user_id AND symbol = :symbol GROUP BY symbol",
+                          user_id=session["user_id"], symbol=symbol)
+        if len(rows) != 1 or rows[0]["total_shares"] < shares:
             return apology("not enough shares", 403)
-        quote = lookup(symbol)
-        if quote is None:
-            return apology("invalid symbol", 403)
-        revenue = quote['price'] * shares
-        db.execute("UPDATE users SET cash = cash + ? WHERE id = ?", (revenue, session["user_id"]))
-        db.execute("INSERT INTO transactions (user_id, symbol, shares, price) VALUES (?, ?, ?, ?)",
-                   (session["user_id"], symbol, -shares, quote['price']))
-        conn.commit()
-        return redirect(url_for("index"))
+
+        # Process the sale of the stock
+        price = lookup(symbol)["price"]
+        total = price * shares
+        db.execute("INSERT INTO transactions (user_id, symbol, shares, price, type) VALUES (:user_id, :symbol, :shares, :price, :type)",
+                   user_id=session["user_id"], symbol=symbol, shares=-shares, price=price, type='sell')
+        db.execute("UPDATE users SET cash = cash + :total WHERE id = :id", total=total, id=session["user_id"])
+
+        # Redirect user to home page
+        return redirect("/")
+
     else:
-        db.execute("SELECT DISTINCT symbol FROM transactions WHERE user_id = ?", (session["user_id"],))
-        symbols = db.fetchall()
+        # Retrieve list of owned symbols for selling
+        rows = db.execute("SELECT DISTINCT symbol FROM transactions WHERE user_id = :user_id", user_id=session["user_id"])
+        symbols = [row["symbol"] for row in rows]
         return render_template("sell.html", symbols=symbols)
