@@ -1,30 +1,41 @@
-
 import React, { useState } from 'react';
+import axios from 'axios';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
+const AddTask = () => {
+    const router = useRouter();
+    const [inputs, setInputs] = useState({});
 
-
-const AddTask = (props) => {
-    const [task, setTask] = useState('');
-    
     
     const handleTaskChange = (e) => {
-        setTask(e.target.value);
+        const name = e.target.name;
+        const value = e.target.value;
+        setInputs(prevState => ({...prevState, [name]: value}));
     }
-    
     
     const handleSubmit = (e) => {
         e.preventDefault();
-        props.addTask(task, date, time);
-        setTask('');
+            axios.post('/api/tasks', inputs)
+                .then(res => {
+                    console.log(res);
+                }).catch(err => {
+                    console.log(err);
+                }).finally(() => {
+                    setInputs({});
+                    router.push('/crud');
+                    router.refresh();
+                });
     }
     
     return (
         <div className="flex items-center justify-center">
             <form onSubmit={handleSubmit} className="p-6 bg-white rounded shadow-md">
                 <input 
+                    name="title"
                     type="text" 
                     placeholder="Add Task" 
-                    value={task} 
+                    value={inputs.title || ''} 
                     onChange={handleTaskChange} 
                     className="w-full p-2 mb-3 border rounded shadow appearance-none focus:outline-none focus:ring-2 focus:ring-blue-600"
                 />
