@@ -16,4 +16,14 @@ model Task {
   title    String
   createdAt DateTime @default(now())
   completed Boolean @default(false)
+  subTasks SubTask[]
+}
+
+model SubTask {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  title    String
+  createdAt DateTime @default(now())
+  completed Boolean @default(false)
+  taskId   String @map("task_id") 
+  task     Task   @relation(fields: [taskId], references: [id])
 }

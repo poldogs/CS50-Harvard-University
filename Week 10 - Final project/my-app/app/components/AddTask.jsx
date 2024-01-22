@@ -23,7 +23,7 @@ const AddTask = () => {
                     console.log(err);
                 }).finally(() => {
                     setInputs({});
-                    router.push('/crud');
+                    router.push('/tasks');
                     router.refresh();
                 });
     }
