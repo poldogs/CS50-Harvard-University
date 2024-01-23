@@ -34,6 +34,11 @@ const Header = () => {
                 Tasks
             </Link>
             </li>
+            <li>
+            <Link href="/calendar" className={pathname === "/calendar" ? "text-blue-500 font-bold" : "" }>
+                Calendar
+            </Link>
+            </li>
         </ul>
         </div>
     );

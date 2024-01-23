@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { FaRegLightbulb, FaTasks } from "react-icons/fa";
+import { FaRegLightbulb, FaTasks, FaRegCalendarAlt } from "react-icons/fa";
 
 const Homepage = () => {
   return (
@@ -16,13 +16,24 @@ const Homepage = () => {
         </div>
       </div>
 
-      <div className="p-6 max-w-sm mx-auto bg-white rounded-xl shadow-md flex items-center space-x-4">
+      <div className="p-6 max-w-sm mx-auto bg-white rounded-xl shadow-md flex items-center space-x-4 mb-4">
         <div className="flex-shrink-0">
           <FaTasks className="h-12 w-12"/>
         </div>
         <div>
           <Link href="/tasks">
             <div className="text-xl font-medium text-black">Start writing Tasks</div>
+          </Link>
+        </div>
+      </div>
+
+      <div className="p-6 max-w-sm mx-auto bg-white rounded-xl shadow-md flex items-center space-x-4">
+        <div className="flex-shrink-0">
+          <FaRegCalendarAlt className="h-12 w-12"/>
+        </div>
+        <div>
+          <Link href="/calendar">
+            <div className="text-xl font-medium text-black">View Calendar</div>
           </Link>
         </div>
       </div>

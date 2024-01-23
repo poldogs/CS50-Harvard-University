@@ -5,18 +5,23 @@ import { NextResponse } from "next/server";
 export const POST = async (req) => {
     try {
         const body = await req.json();
-        const { title } = body;
+        const { title, desc, completed, deadLine, subTasks } = body;
 
         const newTask = await prisma.task.create({
             data: {
-                title
+                title,
+                desc,
+                completed,
+                deadLine,
+                subTasks: {
+                    create: subTasks
+                }
             },
         });
 
         return NextResponse.json(newTask);
     } catch (error) {
         return NextResponse.json({message: error.message}, 500);
-
     }
 }
 
