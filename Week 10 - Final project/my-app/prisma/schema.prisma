@@ -15,9 +15,10 @@ model Task {
   id       String @id @default(auto()) @map("_id") @db.ObjectId
   title    String
   desc     String
+  deadLine DateTime
+  color    String
   createdAt DateTime @default(now())
   completed Boolean @default(false)
-  deadLine DateTime?
   subTasks SubTask[]
 }
 

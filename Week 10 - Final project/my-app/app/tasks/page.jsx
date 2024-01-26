@@ -20,6 +20,11 @@ const TasksPage = () => {
     const [tasks, setTasks] = useState([]);
     const [taskToEdit, setTaskToEdit] = useState(null);
     const [search, setSearch] = useState('');
+    const [update, setUpdate] = useState(false);
+
+    const handleUpdate = () => {
+        setUpdate(!update);
+    }
     
     const router = useRouter();
     const [refresh, setRefresh] = useState(false);
@@ -69,7 +74,7 @@ const TasksPage = () => {
     return (
         <div className="py-2">
             <h1 className="text-4xl">Tasks</h1>
-            <AddTask taskToEdit={taskToEdit} onEditDone={handleEditDone}/>
+            <AddTask taskToEdit={taskToEdit} onEditDone={handleEditDone} onUpdate={handleUpdate}/>
             <div className="w-full p-2 mb-3 mt-3 border rounded shadow appearance-none focus:outline-none focus:ring-2 focus:ring-blue-600 flex">
                 <input 
                     type="text" 

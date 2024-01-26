@@ -1,12 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
 
-const AddTask = () => {
+const AddTask = ({ onUpdate }) => {
     const router = useRouter();
     const [inputs, setInputs] = useState({});
-    const [subTasks, setSubTasks] = useState(['']);
 
     const handleTaskChange = (e) => {
         const name = e.target.name;
@@ -14,29 +12,21 @@ const AddTask = () => {
         setInputs(prevState => ({...prevState, [name]: value}));
     }
 
-    const handleSubTaskChange = (e, index) => {
-        const newSubTasks = [...subTasks];
-        newSubTasks[index] = e.target.value;
-        setSubTasks(newSubTasks);
-    }
-
-    const addSubTask = () => {
-        setSubTasks([...subTasks, '']);
-    }
+    useEffect(() => {
+        console.log('inputs changed', inputs);
+    }, [inputs]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const taskWithSubTasks = {...inputs, subTasks};
-        axios.post('/api/tasks', taskWithSubTasks)
+
+        axios.post('/api/tasks', inputs)
             .then(res => {
                 console.log(res);
             }).catch(err => {
                 console.log(err);
             }).finally(() => {
                 setInputs({});
-                setSubTasks(['']);
-                router.push('/tasks');
-                router.refresh();
+                onUpdate();
             });
     }
 
@@ -52,45 +42,28 @@ const AddTask = () => {
                     className="w-full p-2 mb-3 border rounded shadow appearance-none focus:outline-none focus:ring-2 focus:ring-blue-600"
                 />
                 <textarea
-                    name="description"
+                    name="desc"
                     placeholder="Add Description"
-                    value={inputs.description || ''}
+                    value={inputs.desc || ''}
                     onChange={handleTaskChange}
                     className="w-full p-2 mb-3 border rounded shadow appearance-none focus:outline-none focus:ring-2 focus:ring-blue-600"
                 />
-                <input
-                    name="deadline"
-                    type="date"
-                    value={inputs.deadline || ''}
-                    onChange={handleTaskChange}
-                    className="w-full p-2 mb-3 border rounded shadow appearance-none focus:outline-none focus:ring-2 focus:ring-blue-600"
-                />
-                {subTasks.map((subTask, index) => (
-                    <div key={index} className="flex justify-end space-x-2">
-                        <input
-                            name={`subTasks[${index}].title`}
-                            type="text"
-                            placeholder="Add SubTask"
-                            value={inputs.subTasks[index].title}
-                            onChange={(e) => handleSubTaskChange(e, index, 'title')}
-                            className="w-3/4 p-2 mb-3 border rounded shadow appearance-none focus:outline-none focus:ring-2 focus:ring-blue-600"
-                        />
-                        <input
-                            name={`subTasks[${index}].deadline`}
-                            type="date"
-                            value={inputs.subTasks[index].deadline}
-                            onChange={(e) => handleSubTaskChange(e, index, 'deadline')}
-                            className="w-3/4 p-2 mb-3 border rounded shadow appearance-none focus:outline-none focus:ring-2 focus:ring-blue-600"
-                        />
-                    </div>
-                ))}
-                <button 
-                    type="button" 
-                    onClick={addSubTask}
-                    className="w-1/4 p-2 text-white bg-blue-600 rounded hover:bg-blue-700 ml-auto"
-                >
-                    +
-                </button>
+                <div className="flex justify-between">
+                    <input
+                        name="deadLine"
+                        type="date"
+                        value={inputs.deadLine || ''}
+                        onChange={handleTaskChange}
+                        className="w-1/2 p-2 mb-3 border rounded shadow appearance-none focus:outline-none focus:ring-2 focus:ring-blue-600"
+                    />
+                    <input
+                        name="color"
+                        type="color"
+                        value={inputs.color || '#000000'}
+                        onChange={handleTaskChange}
+                        className="w-16 h-8 p-0 mb-3 border rounded shadow appearance-none focus:outline-none focus:ring-2 focus:ring-blue-600"
+                    />
+                </div>
                 <button 
                     type="submit" 
                     className="w-full p-2 text-white bg-blue-600 rounded hover:bg-blue-700 mt-3"
