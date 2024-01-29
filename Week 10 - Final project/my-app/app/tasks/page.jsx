@@ -6,15 +6,6 @@ import TasksList from "../components/TasksList";
 import { useRouter } from "next/navigation";
 import { FaSearch } from "react-icons/fa";
 
-const getTasks = async () => {
-    const res = await fetch('http://localhost:3000/api/tasks', { cache: "no-store"});
-    
-    if(!res.ok) {
-        throw new Error(res.statusText);
-    }
-
-    return res.json();
-}
 
 const TasksPage = () => {
     const [tasks, setTasks] = useState([]);

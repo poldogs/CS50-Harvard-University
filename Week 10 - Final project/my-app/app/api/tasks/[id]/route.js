@@ -27,14 +27,17 @@ export const PATCH = async (req, { params }) => {
     try {
         const { id } = params;
         const body = await req.json();
-        const { title } = body;
+        const { title, desc, deadLine, color } = body;
 
         const updateTask = await prisma.task.update({
             where: {
                 id
             },
             data: {
-                title
+                title,
+                desc,
+                deadLine,
+                color
             },
         });
 

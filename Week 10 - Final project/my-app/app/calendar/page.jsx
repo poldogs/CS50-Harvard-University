@@ -1,7 +1,9 @@
+"use client";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
+import { FaTasks } from "react-icons/fa";
 
 const CalendarPage = () => {
   const [tasks, setTasks] = useState([]);
@@ -21,12 +23,15 @@ const CalendarPage = () => {
 
   const deadlines = tasks.map(task => new Date(task.deadLine).toDateString());
 
-  const tileClassName = ({ date, view }) => {
-    // Add class to tiles in month view only
+  const tileContent = ({ date, view }) => {
     if (view === 'month') {
-      // Check if a date React-Calendar wants to check is on the list of dates to add class to
-      if (deadlines.find(dDate => dDate === date.toDateString())) {
-        return 'highlight';
+      const taskForThisDay = tasks.find(task => new Date(task.deadLine).toDateString() === date.toDateString());
+      if (taskForThisDay) {
+        return (
+          <span style={{ display: 'inline-flex', marginLeft: '2px', color: 'rgb(0, 123, 255)', fontSize:'15px'}} title={taskForThisDay.title}>
+            <FaTasks />
+          </span>
+        );
       }
     }
   }
@@ -35,7 +40,7 @@ const CalendarPage = () => {
     <div>
       <h1 className="text-4xl">Tasks' Deadline</h1>
       
-      <Calendar locale="en-US" tileClassName={tileClassName} />
+      <Calendar locale="en-US" tileContent={tileContent}/>
 
       <Link href="/">
           <div className="inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition bg-red-500 rounded shadow ripple hover:shadow-lg hover:bg-red-600 focus:outline-none">
