@@ -14,15 +14,13 @@ export const GET = async (req) => {
 export const POST = async (req) => {
     try {
         const body = await req.json();
-        const { title, desc, deadLine, color, taskId } = body;
+        const { title, deadLine, taskId } = body;
 
         const newSubTask = await prisma.subTask.create({
             data: {
                 title : title,
-                desc : desc,
-                deadLine : deadLine + 'T23:59:59Z',
-                color : color,
-                taskId: taskId
+                deadLine : deadLine ? deadLine + 'T23:59:59Z' : null,
+                taskId: taskId,
             }
         });
 

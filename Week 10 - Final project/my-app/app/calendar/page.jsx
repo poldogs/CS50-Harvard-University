@@ -38,9 +38,9 @@ const CalendarPage = () => {
 
   return (
     <div>
-      <h1 className="text-4xl">Tasks' Deadline</h1>
+      <h1 className="text-4xl mb-4">Tasks' Deadline</h1>
       
-      <Calendar locale="en-US" tileContent={tileContent}/>
+      <Calendar locale="en-US" tileContent={tileContent} className="mb-4"/>
 
       <Link href="/">
           <div className="inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition bg-red-500 rounded shadow ripple hover:shadow-lg hover:bg-red-600 focus:outline-none">
