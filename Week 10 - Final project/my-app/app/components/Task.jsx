@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { FaCheckSquare } from 'react-icons/fa';
 import Link from 'next/link';
 
-const Task = ({ task }) => {
+const Task = ({ task, handleComplete }) => {
     const router = useRouter();
 
     const formatDate = (dateString) => {
@@ -23,9 +23,13 @@ const Task = ({ task }) => {
             <p className="text-sm text-gray-500 mb-4">Deadline: {formatDate(task.deadLine)}</p>
             <div className="flex justify-end space-x-4">
                 {task.completed ? 
-                    <FaCheckSquare className="text-green-500 text-4xl" /> 
+                    <button onClick={() => handleComplete(task.id)}>
+                        <FaCheckSquare className="text-green-500 text-4xl" /> 
+                    </button>
                     : 
-                    <FaCheckSquare className="text-4xl" />
+                    <button onClick={() => handleComplete(task.id)}>
+                        <FaCheckSquare className="text-4xl" />
+                    </button>
                 }
                 <Link href={`/tasks/${task.id}`}>
                     <button className="px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded hover:bg-blue-600">Edit</button>

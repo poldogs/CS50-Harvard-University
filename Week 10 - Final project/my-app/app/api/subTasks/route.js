@@ -1,13 +1,23 @@
 import prisma from "@/app/libs/prismadb";
 import { NextResponse } from "next/server";
+import { useSearchParams } from "next/navigation";
 
 export const GET = async (req) => {
     try {
-        const subTasks = await prisma.subTask.findMany();
+        const url = new URL(req.url)
+
+        const taskId = url.searchParams.get("taskId")
+
+        const subTasks = await prisma.subTask.findMany({
+            where: {
+                taskId: taskId,
+            },
+        });
+
         return NextResponse.json(subTasks);
     } catch (error) {
-        return NextResponse.json({message: error.message}, 500);
-
+        console.log(error)
+        return NextResponse.status(500).json({message: error.message});
     }
 }
 
@@ -19,7 +29,7 @@ export const POST = async (req) => {
         const newSubTask = await prisma.subTask.create({
             data: {
                 title : title,
-                deadLine : deadLine ? deadLine + 'T23:59:59Z' : null,
+                deadLine : deadLine + 'T23:59:59Z',
                 taskId: taskId,
             }
         });

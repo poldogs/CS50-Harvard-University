@@ -61,6 +61,24 @@ const TasksPage = () => {
     const filteredTasks = tasks.filter(task => 
         task.title.toLowerCase().includes(search.toLowerCase())
     );
+
+    const handleComplete = async (id) => {
+        const res = await fetch(`/api/tasks/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ 
+                completed: !tasks.find(task => task.id === id).completed 
+            })
+        });
+        if (res.ok) {
+            const updatedTask = await res.json();
+            setTasks(tasks.map(task => task.id === id ? updatedTask : task));
+        } else {
+            console.error('Failed to update task');
+        }
+    }
     
     return (
         <div className="py-2">
@@ -76,7 +94,7 @@ const TasksPage = () => {
                 />
                 <FaSearch className="self-center ml-2" />
             </div>
-            <TasksList tasks={filteredTasks} onEdit={handleEdit} onDelete={handleDelete}/>
+            <TasksList tasks={filteredTasks} onEdit={handleEdit} onDelete={handleDelete} handleComplete={handleComplete}/>
             <Link href="/">
                 <div className="inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition bg-red-500 rounded shadow ripple hover:shadow-lg hover:bg-red-600 focus:outline-none mt-4">
                     Back Home
