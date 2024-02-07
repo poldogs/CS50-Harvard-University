@@ -52,6 +52,12 @@ export const DELETE = async (req, { params }) => {
     try {
         const { id } = params;
 
+        await prisma.subTask.deleteMany({
+            where: {
+                taskId: id
+            },
+        });
+
         await prisma.task.delete({
             where: {
                 id

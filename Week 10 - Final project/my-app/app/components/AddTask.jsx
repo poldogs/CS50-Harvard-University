@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 
-const AddTask = ({ onUpdate }) => {
+const AddTask = ({ addTask }) => {
     const router = useRouter();
     const [inputs, setInputs] = useState({});
 
@@ -22,11 +22,12 @@ const AddTask = ({ onUpdate }) => {
         axios.post('/api/tasks', inputs)
             .then(res => {
                 console.log(res);
+                addTask(res.data);
             }).catch(err => {
                 console.log(err);
             }).finally(() => {
                 setInputs({});
-                onUpdate();
+                router.push('/tasks');
             });
     }
 

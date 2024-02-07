@@ -11,11 +11,6 @@ const TasksPage = () => {
     const [tasks, setTasks] = useState([]);
     const [taskToEdit, setTaskToEdit] = useState(null);
     const [search, setSearch] = useState('');
-    const [update, setUpdate] = useState(false);
-
-    const handleUpdate = () => {
-        setUpdate(!update);
-    }
     
     const router = useRouter();
     const [refresh, setRefresh] = useState(false);
@@ -44,16 +39,6 @@ const TasksPage = () => {
         setTaskToEdit(task);
     }
 
-    const handleEditDone = () => {
-        setTaskToEdit(null);
-        fetchTasks();
-    }
-
-    const handleDelete = async (id) => {
-        await axios.delete(`/api/tasks/${id}`);
-        fetchTasks();
-    }
-
     const handleSearchChange = (e) => {
         setSearch(e.target.value);
     }
@@ -61,6 +46,14 @@ const TasksPage = () => {
     const filteredTasks = tasks.filter(task => 
         task.title.toLowerCase().includes(search.toLowerCase())
     );
+
+    const addTask = (newTask) => {
+        setTasks(prevTasks => [...prevTasks, newTask]);
+    }
+
+    const deleteTask = (id) => {
+        setTasks(prevTasks => prevTasks.filter(task => task.id !== id));
+    }
 
     const handleComplete = async (id) => {
         const res = await fetch(`/api/tasks/${id}`, {
@@ -83,7 +76,7 @@ const TasksPage = () => {
     return (
         <div className="py-2">
             <h1 className="text-4xl">Tasks</h1>
-            <AddTask taskToEdit={taskToEdit} onEditDone={handleEditDone} onUpdate={handleUpdate}/>
+            <AddTask addTask={addTask}/>
             <div className="w-full p-2 mb-3 mt-3 border rounded shadow appearance-none focus:outline-none focus:ring-2 focus:ring-blue-600 flex">
                 <input 
                     type="text" 
@@ -94,7 +87,7 @@ const TasksPage = () => {
                 />
                 <FaSearch className="self-center ml-2" />
             </div>
-            <TasksList tasks={filteredTasks} onEdit={handleEdit} onDelete={handleDelete} handleComplete={handleComplete}/>
+            <TasksList tasks={filteredTasks} onEdit={handleEdit} handleComplete={handleComplete} deleteTask={deleteTask} />
             <Link href="/">
                 <div className="inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition bg-red-500 rounded shadow ripple hover:shadow-lg hover:bg-red-600 focus:outline-none mt-4">
                     Back Home

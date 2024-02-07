@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { FaCheckSquare } from 'react-icons/fa';
 import Link from 'next/link';
 
-const Task = ({ task, handleComplete }) => {
+const Task = ({ task, handleComplete, deleteTask }) => {
     const router = useRouter();
 
     const formatDate = (dateString) => {
@@ -42,12 +42,12 @@ const Task = ({ task, handleComplete }) => {
                         axios.delete(`/api/tasks/${task.id}`)
                             .then(res => {
                                 console.log(res);
+                                deleteTask(task.id);
                             }).catch(err => {
                                 console.log(err);
                             })
                             .finally(() => {
                                 router.push('/tasks');
-                                router.refresh();
                             })
                     }
                 } >Delete </button>
