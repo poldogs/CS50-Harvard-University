@@ -9,7 +9,7 @@ const AboutPage = () => {
         <iframe 
           width="560" 
           height="315" 
-          src="" 
+          src="https://youtu.be/2R4ad4PaAZo" 
           title="Poldo's CS50 Final Project Demo" 
           frameborder="0" 
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
